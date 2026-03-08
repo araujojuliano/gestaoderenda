@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plataforma de Gestão de Renda</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Plataforma de Gestão de Renda</h1>
+      <p>
+        Protótipo em HTML, CSS e JavaScript para calcular metas, registrar resultados diários,
+        acompanhar desempenho mensal e monitorar a poupança de trabalhadores autônomos.
+      </p>
+    </div>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>1) Configuração e simulação</h2>
+        <p>Informe seus dados base. A poupança mensal e as estimativas diárias serão calculadas matematicamente.</p>
+
+        <form id="form-simulacao" class="form-grid">
+          <div class="field">
+            <label for="veiculo_id">Veículo</label>
+            <select id="veiculo_id" required></select>
+          </div>
+
+          <div class="field">
+            <label for="preco_combustivel">Preço do combustível (R$)</label>
+            <input type="number" step="0.01" id="preco_combustivel" value="6.20" required />
+          </div>
+
+          <div class="field">
+            <label for="tarifa_media">Tarifa média por corrida (R$)</label>
+            <input type="number" step="0.01" id="tarifa_media" value="7.50" required />
+          </div>
+
+          <div class="field small">
+            <label for="meta_liquida">Meta líquida mensal (R$)</label>
+            <input type="number" step="0.01" id="meta_liquida" value="1800" required />
+          </div>
+
+          <div class="field small">
+            <label for="meta_poupanca">Poupança mensal (R$)</label>
+            <input type="number" step="0.01" id="meta_poupanca" readonly title="15% da meta líquida" />
+          </div>
+
+          <div class="field small">
+            <label for="valor_seguro">Seguro mensal (R$)</label>
+            <input type="number" step="0.01" id="valor_seguro" value="120" required />
+          </div>
+
+          <div class="field small">
+            <label for="dias_mes">Dias trabalhados no mês</label>
+            <input type="number" id="dias_mes" value="22" required />
+          </div>
+
+          <div class="field full">
+            <div class="actions">
+              <button type="submit" class="btn-primary">Calcular e salvar configuração</button>
+              <button type="button" id="btn-limpar-config" class="btn-secondary">Restaurar padrão</button>
+            </div>
+          </div>
+        </form>
+
+        <div class="note-box" id="parametros-internos"></div>
+        <div class="results-grid" id="simulacao-resultado"></div>
+        <div id="simulacao-alerta"></div>
+      </section>
+
+      <section class="panel">
+        <h2>2) Registro diário</h2>
+        <p>Ao final do dia, registre o resultado real. O valor da poupança é calculado automaticamente pelo sistema como 15% do valor líquido que fica no bolso no dia.</p>
+        <form id="form-registro" class="form-grid">
+          <div class="field small">
+            <label for="registro_data">Data</label>
+            <input type="date" id="registro_data" required />
+          </div>
+
+          <div class="field small">
+            <label for="registro_bruto">Faturamento bruto (R$)</label>
+            <input type="number" step="0.01" id="registro_bruto" required />
+          </div>
+
+          <div class="field small">
+            <label for="registro_corridas">Quantidade de corridas</label>
+            <input type="number" id="registro_corridas" value="0" required />
+          </div>
+
+          <div class="field small">
+            <label for="registro_km_dia">KM rodados no dia</label>
+            <input type="number" step="0.1" id="registro_km_dia" value="0" required />
+          </div>
+
+          <div class="field small">
+            <label for="registro_combustivel">Gasto com combustível (R$)</label>
+            <input type="number" step="0.01" id="registro_combustivel" value="0" required />
+          </div>
+
+          <div class="field small">
+            <label for="registro_outros">Outros custos do dia (R$)</label>
+            <input type="number" step="0.01" id="registro_outros" value="0" required />
+          </div>
+
+          <div class="field half">
+            <label for="registro_poupado">Poupança automática (R$)</label>
+            <input type="number" step="0.01" id="registro_poupado" readonly title="Calculado automaticamente" />
+          </div>
+
+          <div class="field half">
+            <label for="registro_obs">Observações</label>
+            <textarea id="registro_obs" placeholder="Ex.: dia com muito trânsito, chuva, poucas corridas..."></textarea>
+          </div>
+
+          <div class="field full">
+            <div class="actions">
+              <button type="submit" class="btn-primary">Salvar registro do dia</button>
+              <button type="button" id="btn-preencher-estimativa" class="btn-secondary">Usar valores estimados da simulação</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel">
+        <h2>3) Painel mensal</h2>
+        <p>Visualize seu desempenho. Aqui o sistema aprende o seu KM Médio Real.</p>
+
+        <div class="form-grid">
+          <div class="field small">
+            <label for="filtro_mes">Mês de análise</label>
+            <input type="month" id="filtro_mes" />
+          </div>
+          <div class="field full">
+            <div class="actions">
+              <button type="button" id="btn-atualizar-painel" class="btn-primary">Atualizar painel</button>
+              <button type="button" id="btn-exportar-csv" class="btn-secondary">Exportar CSV do mês</button>
+              <button type="button" id="btn-limpar-registros" class="btn-danger">Apagar todos os registros</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="results-grid" id="painel-mensal"></div>
+        <div id="status-mes"></div>
+
+        <h3>Registros do mês</h3>
+        <div id="tabela-registros"></div>
+      </section>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
